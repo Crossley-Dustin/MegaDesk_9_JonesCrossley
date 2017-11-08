@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@Page.Title</title>
+    <link href="~/Styles/megadesk.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div id="container">
+        <header>
+            <h1>Hello World Page</h1>
+        </header>
+        <div id="main">
+            @RenderBody()
+        </div>
+        <footer>
+            &copy; @DateTime.Now.Year MegaDesk 9 Jones|Crossley
+        </footer>
+    </div>
+</body>
+</html>
