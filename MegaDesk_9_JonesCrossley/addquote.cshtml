@@ -1,9 +1,100 @@
 ﻿@{
     Layout = "~/_Layout.cshtml";
     Page.Title = "Add MegaDesk Quote";
+
+    Validation.RequireField("customerName", "Customer Name required");
+
+
+
+
+    string customerName = "";
+    int deskWidth = 24;
+    int deskDepth = 12;
+    int drawers = 0;
+    var surfaceMaterial = MegaDesk_9_JonesCrossley.Desk.DesktopMaterial.Pine;
+    var rushDays = MegaDesk_9_JonesCrossley.DeskQuote.RushDays.None;
+    decimal QuoteAmount = 0;
+
+
+    if (IsPost && Validation.IsValid())
+    {
+        customerName = Request.Form["customerName"];
+        deskWidth = Request.Form["deskWidth"].AsInt();
+        deskDepth = Request.Form["deskDepth"].AsInt();
+        drawers = Request.Form["drawers"].AsInt();
+        surfaceMaterial = MegaDesk_9_JonesCrossley.DeskQuote.StringToSurfaceMaterial(Request.Form["surfaceMaterial"]);
+        rushDays = MegaDesk_9_JonesCrossley.DeskQuote.NumberToRushDays(Request.Form["rushDays"].AsInt());
+
+        MegaDesk_9_JonesCrossley.DeskQuote quote;
+        quote = new MegaDesk_9_JonesCrossley.DeskQuote(customerName, deskWidth, deskDepth, drawers, surfaceMaterial, rushDays);
+        var QuoteDate = quote.QuoteDate;
+        QuoteAmount = quote.QuoteAmount;
+
+        var db = Database.Open("MegaDeskQuotes");
+        var insertCommand = "INSERT INTO DeskQuote (CustomerName, QuoteAmount, QuoteDate, RushOrderDAys, Width, Depth, DrawerCount, SurfaceMaterial)" +
+                    "VALUES (@0,@1,@2,@3,@4,@5,@6,@7)";
+        db.Execute(insertCommand, customerName, QuoteAmount, QuoteDate, (int)rushDays, deskWidth, deskDepth, drawers, (decimal)surfaceMaterial);
+        Response.Redirect("~/index");
+    }
 }
 
-<h1>Add Quote</h1>
+<h2>Add Quote</h2>
+@Html.ValidationSummary()
+<form method="post">
+    <fieldset>
+        <legend>Desk Quote Information</legend>
+        <p>
+            <label for="customerName">Customer Name</label>
+            <input type="text" name="customerName" value="@Request.Form["customerName"]" />
+            @Html.ValidationMessage("customerName")
+        </p>
+        <p>
+            <label for="deskWidth">Desk Width</label>
+            <input type="text" name="deskWidth" value="@Request.Form["deskWidth"]" placeholder="24 to 96 Inches"/>
+            @Html.ValidationMessage("deskWidth")
+        </p>
+        <p>
+            <label for="deskDepth">Desk Depth</label>
+            <input type="text" name="deskWidth" value="@Request.Form["deskDepth"]" placeholder="12 to 48 Inches" />
+            @Html.ValidationMessage("deskDepth")
+        </p>
+        <p>
+            <label for="drawers">Number of Drawers</label>
+            <input type="range" min="@MegaDesk_9_JonesCrossley.DeskQuote.MIN_DRAWERS" 
+                   max="@MegaDesk_9_JonesCrossley.DeskQuote.MAX_DRAWERS" 
+                   name="drawers" value="@Request.Form["drawers"]" 
+                   placeholder="@MegaDesk_9_JonesCrossley.DeskQuote.MIN_DRAWERS to @MegaDesk_9_JonesCrossley.DeskQuote.MIN_DRAWERS Drawers"
+                   oninput="outputDrawerCount(value)"/>
+            <output for="drawers" id="numDrawers">@Request.Form["drawers"]</output>
+            @Html.ValidationMessage("drawers")
+        </p>
+        <p>
+            <label for="surfaceMaterial">Surface Material</label>
+            @*@Html.DropDownList("Material", Enum.GetValues(typeof(@MegaDesk_9_JonesCrossley.Desk.DesktopMaterial)).Cast<@MegaDesk_9_JonesCrossley.Desk.DesktopMaterial>().ToList())*@
+            <select name="surfaceMaterial">
+                <option value="Pine">Pine</option>
+                <option value="Rosewood">Rosewood</option>
+            </select>
+            @Html.ValidationMessage("deskDepth")
+        </p>
+        <p>
+            <label for="rushDays">Rush Order Days</label>
+            <select name="rushDays">
+                <option value="0">0</option>
+                <option value="3">3</option>
+                <option value="5">5</option>
+                <option value="7">7</option>
+            </select>
+            @Html.ValidationMessage("rushDays")
+        </p>
+        <p><input type="submit" name="buttonSubmit" value="Add Quote" /></p>
+    </fieldset>
+</form>
 <p>
     <a href="~/index.cshtml">Return to Main Menu</a>
 </p>
+<script>
+    function outputDrawerCount(drawerCount) {
+        document.querySelector("numDrawers").value = drawerCount;
+    }
+</script>

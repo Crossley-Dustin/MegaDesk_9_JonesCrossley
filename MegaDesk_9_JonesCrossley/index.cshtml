@@ -1,11 +1,32 @@
 ﻿@{ 
     Layout = "~/_Layout.cshtml";
     Page.Title = "MegaDesk";
+
+    var db = Database.Open("MegaDeskQuotes");
+    var selectCommand = "SELECT * FROM DeskQuote";
+
+    var selectedData = db.Query(selectCommand);
+    var grid = new WebGrid(source: selectedData, defaultSort: "CustomerName", rowsPerPage: 5);
  }
 
-<h1>MegaDesk Menu</h1>
+<h2>MegaDesk Quotes</h2>
 <p>
-    <a href="~/addquote.cshtml"><input type="button" name="addquote" value="Add Quote" /></a>
-    <a href="~/viewquotes.cshtml"><input type="button" name="viewquotes" value="View Quotes" /></a>
-    <a href="~/searchquotes.cshtml"><input type="button" name="searchquotes" value="Search Quotes" /></a>
+    <span>Search stuff here</span>
+</p>
+
+<div>
+    @grid.GetHtml(
+        tableStyle: "grid",
+        headerStyle: "head",
+        footerStyle: "foot",
+        alternatingRowStyle: "alt",
+        columns: grid.Columns(
+            grid.Column("CustomerName", header:"Customer Name", canSort: true),
+            grid.Column("QuoteDate", header: "Quote Date", canSort: true),
+            grid.Column("QuoteAmount", header:"Quote Amount", canSort:false)
+            )
+    )
+</div>
+<p>
+    <a href="~/addquote.cshtml">Add Quote</a>
 </p>
