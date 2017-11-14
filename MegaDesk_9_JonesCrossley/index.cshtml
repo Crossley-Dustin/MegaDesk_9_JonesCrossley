@@ -4,26 +4,46 @@
 
     var db = Database.Open("MegaDeskQuotes");
     var selectCommand = "SELECT * FROM DeskQuote";
+    var searchName = "";
+    var searchMaterial = "";
 
-    var selectedData = db.Query(selectCommand);
+    if (!Request.QueryString["searchName"].IsEmpty() || !Request.QueryString["searchMaterial"].IsEmpty())
+    {
+        selectCommand = "SELECT * FROM DeskQuote WHERE CustomerName LIKE @0 AND SurfaceMaterial LIKE @1";
+        searchName = "%" + Request.QueryString["searchName"] + "%";
+        searchMaterial = "%" + Request.QueryString["searchMaterial"] + "%";
+    }
+
+    var selectedData = db.Query(selectCommand, searchName, searchMaterial);
     var grid = new WebGrid(source: selectedData, defaultSort: "CustomerName", rowsPerPage: 5);
  }
 
 <h2>MegaDesk Quotes</h2>
-<p>
-    <span>Search stuff here</span>
-</p>
+<form method="get">
+    <div>
+        <label for="searchName">Customer to look for:</label>
+        <input type="text" name="searchName" value="@Request.QueryString["searchName"]" />
+        <input type="Submit" value="Search Customer" /><br />
+        (Leave blank to list all Customers.)<br />
+    </div>
+    <div>
+        <label for="SurfaceMaterial">Surface Material to look for:</label>
+        <input type="text" name="searchMaterial" value="@Request.QueryString["searchMaterial"]" />
+        <input type="Submit" value="Search Surface Material" /><br />
+    </div>
+</form>
 
 <div>
     @grid.GetHtml(
-        tableStyle: "grid",
+        tableStyle: "grid, greenTable",
         headerStyle: "head",
-        footerStyle: "foot",
+        footerStyle: "foot, links",
         alternatingRowStyle: "alt",
         columns: grid.Columns(
-            grid.Column("CustomerName", header:"Customer Name", canSort: true),
-            grid.Column("QuoteDate", header: "Quote Date", canSort: true),
-            grid.Column("QuoteAmount", header:"Quote Amount", canSort:false)
+            grid.Column(format: @<a href="~/displayquote?id=@item.ID">View</a>)
+            ,grid.Column("CustomerName", header:"Customer Name", canSort: true)
+            ,grid.Column("QuoteDate", header: "Quote Date", canSort: true)
+            //,grid.Column("QuoteAmount", header:"Quote Amount", canSort:false)
             )
     )
 </div>

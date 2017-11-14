@@ -1,3 +1,187 @@
-﻿body {
+﻿
+html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
     padding: 20px;
+}
+
+body {
+    height: 60%;
+    font-family: 'Noto Sans', sans-serif;
+    font-size: 12pt;
+    background-color: #D3D3D3;
+    line-height: 1.6em;
+}
+
+h1, h2 {
+    font-family: 'Roboto', sans-serif;
+}
+
+h1 {
+    font-size: 1.6em;
+}
+
+h2 {
+    font-size: 1.4em;
+}
+
+#container {
+    min-height: 100%;
+    position: relative;
+    left: 10%;
+}
+
+#header {
+    padding: 8px;
+    width: 80%;
+    background-color: #24943A; /*#4b6c9e;*/
+    color: White;
+}
+
+#main {
+    width: 80%;
+    padding: 8px;
+    padding-bottom: 4em;
+    background-color: White;
+}
+
+#footer {
+    width: 80%;
+    height: 2em;
+    padding: 8px;
+    margin-top: -2em;
+    background-color: #D3D3D3;
+}
+
+/* table formatting*/
+/*.head {
+    background-color: #E8E8E8;
+    font-weight: bold;
+    color: #FFF;
+}
+
+.grid th, .grid td {
+    border: 1px solid #C0C0C0;
+    padding: 5px;
+}
+
+.alt {
+    background-color: #E8E8E8;
+    color: #000;
+}*/
+/* end table formatting*/
+
+.selected {
+    background-color: Yellow;
+}
+
+.caption {
+    width: 100px;
+}
+
+.dataDisplay {
+    font-weight: bold;
+}
+
+.field-validation-error {
+    font-weight: bold;
+    color: red;
+    background-color: yellow;
+}
+
+.validation-summary-errors {
+    border: 2px dashed red;
+    color: red;
+    background-color: yellow;
+    font-weight: bold;
+    margin: 12px;
+}
+
+
+
+table.greenTable {
+    border: 6px solid #24943A;
+    background-color: #D4EED1;
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+    margin-top: 6px;
+}
+
+/*.greenTable a {
+    text-decoration: none;
+}*/
+
+.greenTable thead a:link, .greenTable thead a:visited {
+    color: #D4EED1;
+}
+
+.greenTable tbody a:link, .greenTable tbody a:visited {
+    color: #444444;
+}
+
+table.greenTable td, table.greenTable th {
+    border: 1px solid #24943A;
+    padding: 3px 2px;
+}
+
+/*table.greenTable tbody td {
+    font-size: 13px;
+}
+*/
+
+table.greenTable thead, .head {
+    background: #24943A;
+    background: -moz-linear-gradient(top, #5baf6b 0%, #3a9e4d 66%, #24943A 100%);
+    background: -webkit-linear-gradient(top, #5baf6b 0%, #3a9e4d 66%, #24943A 100%);
+    background: linear-gradient(to bottom, #5baf6b 0%, #3a9e4d 66%, #24943A 100%);
+    border-bottom: 0 solid #444444;
+}
+
+    table.greenTable thead th {
+        font-size: 19px;
+        font-weight: bold;
+        color: #F0F0F0;
+        text-align: left;
+        border-left: 2px solid #24943A;
+    }
+
+        table.greenTable thead th:first-child {
+            border-left: none;
+        }
+
+table.greenTable tfoot {
+    font-size: 19px;
+    font-weight: bold;
+    color: #F0F0F0;
+    background: #24943A;
+    background: -moz-linear-gradient(top, #5baf6b 0%, #3a9e4d 66%, #24943A 100%);
+    background: -webkit-linear-gradient(top, #5baf6b 0%, #3a9e4d 66%, #24943A 100%);
+    background: linear-gradient(to bottom, #5baf6b 0%, #3a9e4d 66%, #24943A 100%);
+    border-top: 1px solid #24943A;
+}
+
+    table.greenTable tfoot td {
+        font-size: 19px;
+    }
+
+    table.greenTable tfoot .links {
+        text-align: right;
+    }
+
+        table.greenTable tfoot .links a {
+            display: inline-block;
+            background: #FFFFFF;
+            color: #24943A;
+            padding: 2px 8px;
+            border-radius: 5px;
+        }
+
+.alt {
+    background-color: #E8E8E8;
+    color: #000;
 }

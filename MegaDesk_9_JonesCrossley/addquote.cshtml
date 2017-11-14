@@ -3,9 +3,16 @@
     Page.Title = "Add MegaDesk Quote";
 
     Validation.RequireField("customerName", "Customer Name required");
+    Validation.RequireField("deskWidth", "Desk Width required");
+    Validation.RequireField("deskDepth", "Desk Depth required");
+    Validation.RequireField("numDrawers", "Number of Drawers required");
+    Validation.RequireField("surfaceMaterial", "Surface Material required");
+    Validation.RequireField("rushDays", "Rush Number of Days required");
 
-
-
+    Validation.Add("deskWidth", Validator.Range(MegaDesk_9_JonesCrossley.DeskQuote.MIN_WIDTH, MegaDesk_9_JonesCrossley.DeskQuote.MAX_WIDTH, "Width must be between " + MegaDesk_9_JonesCrossley.DeskQuote.MIN_WIDTH + " AND " + MegaDesk_9_JonesCrossley.DeskQuote.MAX_WIDTH));
+    Validation.Add("deskWidth", Validator.Integer("Desk width must be an integer"));
+    Validation.Add("deskDepth", Validator.Range(MegaDesk_9_JonesCrossley.DeskQuote.MIN_DEPTH, MegaDesk_9_JonesCrossley.DeskQuote.MAX_DEPTH, "Depth must be between " + MegaDesk_9_JonesCrossley.DeskQuote.MIN_DEPTH + " AND " + MegaDesk_9_JonesCrossley.DeskQuote.MAX_DEPTH));
+    Validation.Add("deskDepth", Validator.Integer("Desk depth must be an integer"));
 
     string customerName = "";
     int deskWidth = 24;
@@ -33,7 +40,7 @@
         var db = Database.Open("MegaDeskQuotes");
         var insertCommand = "INSERT INTO DeskQuote (CustomerName, QuoteAmount, QuoteDate, RushOrderDAys, Width, Depth, DrawerCount, SurfaceMaterial)" +
                     "VALUES (@0,@1,@2,@3,@4,@5,@6,@7)";
-        db.Execute(insertCommand, customerName, QuoteAmount, QuoteDate, (int)rushDays, deskWidth, deskDepth, drawers, (decimal)surfaceMaterial);
+        db.Execute(insertCommand, customerName, QuoteAmount, QuoteDate, (int)rushDays, deskWidth, deskDepth, drawers, surfaceMaterial);
         Response.Redirect("~/index");
     }
 }
