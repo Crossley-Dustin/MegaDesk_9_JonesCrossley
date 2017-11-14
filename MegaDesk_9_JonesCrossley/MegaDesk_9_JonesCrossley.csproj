@@ -103,6 +103,7 @@
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
+    <Content Include="js\megadesk.js" />
     <Content Include="_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -118,7 +119,6 @@
     <Folder Include="App_Data\" />
     <Folder Include="doc\" />
     <Folder Include="img\" />
-    <Folder Include="js\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

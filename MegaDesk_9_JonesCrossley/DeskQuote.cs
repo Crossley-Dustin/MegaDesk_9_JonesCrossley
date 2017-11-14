@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Web.WebPages.Html;
 
 namespace MegaDesk_9_JonesCrossley
 {
@@ -40,6 +41,16 @@ namespace MegaDesk_9_JonesCrossley
             Seven = 7
         }
 
+        public static List<SelectListItem> RushDaysSelect()
+        {
+            var list = new List<SelectListItem>();
+            foreach (int i in Enum.GetValues(typeof(RushDays)))
+            {
+                list.Add(new SelectListItem { Text = Enum.GetName(typeof(RushDays), i), Value = i.ToString() });
+            }
+            return list;
+        }
+
         /// <summary>
         /// Instance of class will calculate quote amount
         /// </summary>
@@ -51,6 +62,14 @@ namespace MegaDesk_9_JonesCrossley
         /// <param name="RushOrderDays"></param>
         public DeskQuote(string CustomerName, int DeskWidth, int DeskDepth, int DrawerCount, Desk.DesktopMaterial SurfaceMaterial, RushDays RushOrderDays)
         {
+            this.Desk.Width = DeskWidth;
+            this.Desk.Depth = DeskDepth;
+            this.Desk.DrawerCount = DrawerCount;
+            this.Desk.Surface = SurfaceMaterial;
+
+            this._CustomerName = CustomerName;
+            this.RushOrderDays = RushOrderDays;
+            
             CalculateDeskQuote();
         }
         

@@ -21,7 +21,7 @@
         customerName = Request.Form["customerName"];
         deskWidth = Request.Form["deskWidth"].AsInt();
         deskDepth = Request.Form["deskDepth"].AsInt();
-        drawers = Request.Form["drawers"].AsInt();
+        drawers = Request.Form["numDrawers"].AsInt();
         surfaceMaterial = MegaDesk_9_JonesCrossley.DeskQuote.StringToSurfaceMaterial(Request.Form["surfaceMaterial"]);
         rushDays = MegaDesk_9_JonesCrossley.DeskQuote.NumberToRushDays(Request.Form["rushDays"].AsInt());
 
@@ -55,36 +55,27 @@
         </p>
         <p>
             <label for="deskDepth">Desk Depth</label>
-            <input type="text" name="deskWidth" value="@Request.Form["deskDepth"]" placeholder="12 to 48 Inches" />
+            <input type="text" name="deskDepth" value="@Request.Form["deskDepth"]" placeholder="12 to 48 Inches" />
             @Html.ValidationMessage("deskDepth")
         </p>
         <p>
             <label for="drawers">Number of Drawers</label>
             <input type="range" min="@MegaDesk_9_JonesCrossley.DeskQuote.MIN_DRAWERS" 
                    max="@MegaDesk_9_JonesCrossley.DeskQuote.MAX_DRAWERS" 
-                   name="drawers" value="@Request.Form["drawers"]" 
+                   name="numDrawers" value="@Request.Form["numDrawers"]" 
                    placeholder="@MegaDesk_9_JonesCrossley.DeskQuote.MIN_DRAWERS to @MegaDesk_9_JonesCrossley.DeskQuote.MIN_DRAWERS Drawers"
-                   oninput="outputDrawerCount(value)"/>
-            <output for="drawers" id="numDrawers">@Request.Form["drawers"]</output>
-            @Html.ValidationMessage("drawers")
+                   oninput="drawerCount.value = numDrawers.value"/>
+            <output for="drawers" name="drawerCount">@Request.Form["numDrawers"]</output>
+            @Html.ValidationMessage("numDrawers")
         </p>
         <p>
             <label for="surfaceMaterial">Surface Material</label>
-            @*@Html.DropDownList("Material", Enum.GetValues(typeof(@MegaDesk_9_JonesCrossley.Desk.DesktopMaterial)).Cast<@MegaDesk_9_JonesCrossley.Desk.DesktopMaterial>().ToList())*@
-            <select name="surfaceMaterial">
-                <option value="Pine">Pine</option>
-                <option value="Rosewood">Rosewood</option>
-            </select>
-            @Html.ValidationMessage("deskDepth")
+            @Html.DropDownList("surfaceMaterial", MegaDesk_9_JonesCrossley.Desk.DesktopMaterialSelect())
+            @Html.ValidationMessage("surfaceMaterial")
         </p>
         <p>
             <label for="rushDays">Rush Order Days</label>
-            <select name="rushDays">
-                <option value="0">0</option>
-                <option value="3">3</option>
-                <option value="5">5</option>
-                <option value="7">7</option>
-            </select>
+            @Html.DropDownList("rushDays", MegaDesk_9_JonesCrossley.DeskQuote.RushDaysSelect())
             @Html.ValidationMessage("rushDays")
         </p>
         <p><input type="submit" name="buttonSubmit" value="Add Quote" /></p>
@@ -93,8 +84,4 @@
 <p>
     <a href="~/index.cshtml">Return to Main Menu</a>
 </p>
-<script>
-    function outputDrawerCount(drawerCount) {
-        document.querySelector("numDrawers").value = drawerCount;
-    }
-</script>
+

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.WebPages.Html;
 
 namespace MegaDesk_9_JonesCrossley
 {
@@ -17,6 +18,16 @@ namespace MegaDesk_9_JonesCrossley
         {
             Laminate = 100, Oak = 200, Rosewood = 300, Veneer = 125, Pine = 50
         };
+
+        public static List<SelectListItem> DesktopMaterialSelect()
+        {
+            var list = new List<SelectListItem>();
+            foreach (int i in Enum.GetValues(typeof(DesktopMaterial)))
+            {
+                list.Add(new SelectListItem { Text = Enum.GetName(typeof(DesktopMaterial), i), Value = i.ToString() });
+            }
+            return list;
+        }
 
         public int GetSurfaceArea()
         {
