@@ -1,0 +1,125 @@
+﻿@{
+    Layout = "~/_Layout.cshtml";
+    Page.Title = "Edit MegaDesk Quotes";
+
+    var quoteID = "";
+    var customerName = "";
+    //var quoteDate = "";
+    //decimal quoteAmount = 0;
+    var rushOrderDays = MegaDesk_9_JonesCrossley.DeskQuote.RushDays.None;
+    int deskWidth = 24;
+    int deskDepth = 12;
+    int drawerCount = 0;
+    var surfaceMaterial = MegaDesk_9_JonesCrossley.Desk.DesktopMaterial.Pine;
+
+    if (!IsPost)
+    {
+        if (!Request.QueryString["ID"].IsEmpty() && Request.QueryString["ID"].IsInt())
+        {
+            quoteID = Request.QueryString["ID"];
+            var db = Database.Open("MegaDeskQuotes");
+            var dbCommand = "SELECT * FROM DeskQuote WHERE ID = @0";
+            var row = db.QuerySingle(dbCommand, quoteID);
+
+            if (row != null)
+            {
+                customerName = row.CustomerName;
+                //quoteAmount = row.QuoteAmount.ToString();
+                //quoteDate = row.QuoteDate.ToString();
+                rushOrderDays = MegaDesk_9_JonesCrossley.DeskQuote.NumberToRushDays((int)row.RushOrderDays);
+                deskWidth = (int)row.Width;
+                deskDepth = (int)row.Depth;
+                drawerCount = (int)row.DrawerCount;
+                surfaceMaterial = MegaDesk_9_JonesCrossley.DeskQuote.StringToSurfaceMaterial(row.SurfaceMaterial);
+            }
+            else
+            {
+                Validation.AddFormError("No quote was found for that ID.");
+            }
+
+        }
+        else
+        {
+            Validation.AddFormError("No quote was selected.");
+        }
+    }
+
+    if (IsPost)
+    {
+        Validation.RequireField("customerName", "Customer Name required");
+        Validation.RequireField("deskWidth", "Desk Width required");
+        Validation.RequireField("deskDepth", "Desk Depth required");
+        Validation.RequireField("numDrawers", "Number of Drawers required");
+        Validation.RequireField("surfaceMaterial", "Surface Material required");
+        Validation.RequireField("rushDays", "Rush Number of Days required");
+
+        Validation.Add("deskWidth", Validator.Range(MegaDesk_9_JonesCrossley.DeskQuote.MIN_WIDTH, MegaDesk_9_JonesCrossley.DeskQuote.MAX_WIDTH, "Width must be between " + MegaDesk_9_JonesCrossley.DeskQuote.MIN_WIDTH + " AND " + MegaDesk_9_JonesCrossley.DeskQuote.MAX_WIDTH));
+        Validation.Add("deskWidth", Validator.Integer("Desk width must be an integer"));
+        Validation.Add("deskDepth", Validator.Range(MegaDesk_9_JonesCrossley.DeskQuote.MIN_DEPTH, MegaDesk_9_JonesCrossley.DeskQuote.MAX_DEPTH, "Depth must be between " + MegaDesk_9_JonesCrossley.DeskQuote.MIN_DEPTH + " AND " + MegaDesk_9_JonesCrossley.DeskQuote.MAX_DEPTH));
+        Validation.Add("deskDepth", Validator.Integer("Desk depth must be an integer"));
+
+        customerName = Request.Form["customerName"];
+        deskWidth = Request.Form["deskWidth"].AsInt();
+        deskDepth = Request.Form["deskDepth"].AsInt();
+        drawerCount = Request.Form["numDrawers"].AsInt();
+        surfaceMaterial = MegaDesk_9_JonesCrossley.DeskQuote.StringToSurfaceMaterial(Request.Form["surfaceMaterial"]);
+        rushOrderDays = MegaDesk_9_JonesCrossley.DeskQuote.NumberToRushDays(Request.Form["rushDays"].AsInt());
+        quoteID = Request.Form["quoteID"];
+
+        MegaDesk_9_JonesCrossley.DeskQuote quote;
+        quote = new MegaDesk_9_JonesCrossley.DeskQuote(customerName, deskWidth, deskDepth, drawerCount, surfaceMaterial, rushOrderDays);
+
+        if (Validation.IsValid())
+        {
+            var db = Database.Open("MegaDeskQuotes");
+            var updateCommand = "UPDATE DeskQuote SET CustomerName=@0, QuoteAmount=@1, QuoteDate=@2, RushOrderDays=@3, Width=@4, Depth=@5, DrawerCount=@6, SurfaceMaterial=@7 WHERE Id=@8";
+            db.Execute(updateCommand, customerName, quote.QuoteAmount, quote.QuoteDate, (int)rushOrderDays, deskWidth, deskDepth, drawerCount, surfaceMaterial, quoteID);
+            Response.Redirect("~/index");
+        }
+    }
+}
+
+<h1>Edit Quote</h1>
+<form method="post">
+    <fieldset>
+        <legend>Edit Desk Quote Information</legend>
+        <p>
+            <label for="customerName">Customer Name</label>
+            <input type="text" name="customerName" value="@customerName" />
+            @Html.ValidationMessage("customerName")
+        </p>
+        <p>
+            <label for="deskWidth">Desk Width</label>
+            <input type="text" name="deskWidth" value="@deskWidth" placeholder="24 to 96 Inches" />
+            @Html.ValidationMessage("deskWidth")
+        </p>
+        <p>
+            <label for="deskDepth">Desk Depth</label>
+            <input type="text" name="deskDepth" value="@deskDepth" placeholder="12 to 48 Inches" />
+            @Html.ValidationMessage("deskDepth")
+        </p>
+        <p>
+            <label for="drawers">Number of Drawers</label>
+            <input type="range" min="@MegaDesk_9_JonesCrossley.DeskQuote.MIN_DRAWERS"
+                   max="@MegaDesk_9_JonesCrossley.DeskQuote.MAX_DRAWERS"
+                   name="numDrawers" value="@drawerCount"
+                   placeholder="@MegaDesk_9_JonesCrossley.DeskQuote.MIN_DRAWERS to @MegaDesk_9_JonesCrossley.DeskQuote.MIN_DRAWERS Drawers"
+                   oninput="drawerCount.value = numDrawers.value" />
+            <output for="drawers" name="drawerCount">@drawerCount</output>
+            @Html.ValidationMessage("numDrawers")
+        </p>
+        <p>
+            <label for="surfaceMaterial">Surface Material</label>
+            @Html.DropDownList(name: "surfaceMaterial", defaultOption: "", selectList: MegaDesk_9_JonesCrossley.Desk.DesktopMaterialSelect(), selectedValue: @System.Convert.ToInt32(surfaceMaterial), htmlAttributes: new { @class = "ddl" })
+            @Html.ValidationMessage("surfaceMaterial")
+        </p>
+        <p>
+            <label for="rushDays">Rush Order Days</label>
+            @Html.DropDownList(name: "rushDays", defaultOption: "", selectList: MegaDesk_9_JonesCrossley.DeskQuote.RushDaysSelect(), selectedValue: @System.Convert.ToInt32(rushOrderDays), htmlAttributes: new { @class = "ddl" })
+            @Html.ValidationMessage("rushDays")
+        </p>
+        <input type="hidden" name="quoteID" value="@quoteID" />
+        <p><input type="submit" name="buttonSubmit" value="Submit Changes" /></p>
+    </fieldset>
+</form>
+<p><a href="~/index.cshtml">Return to Main Menu</a></p>

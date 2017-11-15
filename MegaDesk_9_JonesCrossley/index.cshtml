@@ -40,10 +40,11 @@
         footerStyle: "foot, links",
         alternatingRowStyle: "alt",
         columns: grid.Columns(
-            grid.Column(format: @<a href="~/displayquote?id=@item.ID">View</a>)
-            ,grid.Column("CustomerName", header:"Customer Name", canSort: true)
-            ,grid.Column("QuoteDate", header: "Quote Date", canSort: true)
-            //,grid.Column("QuoteAmount", header:"Quote Amount", canSort:false)
+            grid.Column(format: @<a href="~/editquote?id=@item.ID">Update</a>)
+            , grid.Column("CustomerName", header: "Customer Name", canSort: true)
+            , grid.Column("QuoteDate", header: "Quote Date", canSort: true)
+            , grid.Column("SurfaceMaterial", header: "Surface Material", canSort: false)
+            , grid.Column(format: @<a href="~/deletequote/?id=@item.ID">Delete</a>)
             )
     )
 </div>
