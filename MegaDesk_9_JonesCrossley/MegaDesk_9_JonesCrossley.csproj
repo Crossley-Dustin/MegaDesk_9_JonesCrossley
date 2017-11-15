@@ -104,6 +104,7 @@
     <Content Include="editquote.cshtml" />
     <Content Include="404.cshtml" />
     <Content Include="deletequote.cshtml" />
+    <Content Include="displayquote.cshtml" />
     <None Include="packages.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

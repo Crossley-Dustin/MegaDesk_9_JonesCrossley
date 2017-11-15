@@ -43,9 +43,19 @@
             Validation.AddFormError("No quote was selected.");
         }
     }
+
+    if (IsPost && !Request["buttonDelete"].IsEmpty())
+    {
+        quoteID = Request.Form["quoteID"];
+        var db = Database.Open("MegaDeskQuotes");
+        var deleteCommand = "DELETE FROM DeskQuote WHERE ID = @0";
+        db.Execute(deleteCommand, quoteID);
+        Response.Redirect("~/index");
+    }
 }
 
 <h1>Delete Quote</h1>
+@Html.ValidationSummary()
 <p><a href="~/index">Return to MegaDesk Quote Listing</a></p>
 <form method="post">
     <fieldset>
